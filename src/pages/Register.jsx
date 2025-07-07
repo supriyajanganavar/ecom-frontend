@@ -1,35 +1,34 @@
 import { useState } from "react";
-import api from "../services/api";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import api from "../services/api";
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { setIsAuthenticated } = useAuth();
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/auth/login", { email, password });
-      setIsAuthenticated(true);
-      navigate("/");
+      await api.post("/auth/register", { email, password });
+      alert("Registration successful. Please login.");
+      navigate("/login");
     } catch (err) {
-      alert("Invalid credentials");
+      alert(err.response?.data?.message || "Registration failed");
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded shadow">
-      <h1 className="text-xl font-bold mb-4">Login</h1>
-      <form onSubmit={handleLogin} className="space-y-4">
+      <h1 className="text-xl font-bold mb-4">Register</h1>
+      <form onSubmit={handleRegister} className="space-y-4">
         <input
           type="email"
           placeholder="Email"
           className="w-full border px-3 py-2 rounded"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
         <input
           type="password"
@@ -37,16 +36,17 @@ const Login = () => {
           className="w-full border px-3 py-2 rounded"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded"
         >
-          Login
+          Register
         </button>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Register;
